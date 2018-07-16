@@ -38,7 +38,7 @@ def set_user_id(user_id):
 def index():
     """ Frontpage. Search prompt. """
     # get userid
-    user_id = get_user_id()  
+    user_id = get_user_id()
     if user_id == 0:
         return render_template("login.html")
 
@@ -54,13 +54,13 @@ def index():
     # query = query + "AND UBC.collection_id = collections.id "
     # query = query + "AND UBC.book_id = books.id "
     # mybooks = db.execute(query, {"user_id": user_id}).fetchall()
-    # return render_template("index.html", mybooks=mybooks)        
-    return render_template("index.html", mybooks={})        
+    # return render_template("index.html", mybooks=mybooks)
+    return render_template("index.html", mybooks={})
 
 
 @app.route("/register")
 def register():
-    return render_template("register.html")    
+    return render_template("register.html")
 
 @app.route("/do_register", methods=["POST"])
 def do_register():
@@ -76,7 +76,7 @@ def do_register():
     if first_name in (None, ''):
         return render_template("register.html", message="Please enter your first name.", alert_class="alert-warning", user_id=user_id, first_name=first_name, last_name=last_name)
     if last_name in (None, ''):
-        return render_template("register.html", message="Please enter your last name.", alert_class="alert-warning", user_id=user_id, first_name=first_name, last_name=last_name)        
+        return render_template("register.html", message="Please enter your last name.", alert_class="alert-warning", user_id=user_id, first_name=first_name, last_name=last_name)
 
     query = "SELECT * FROM users "
     query = query + "WHERE email_address = :user_id "
@@ -109,7 +109,7 @@ def do_login():
         return render_template("login.html",message="Incorrect user ID or password.", alert_class="alert-warning", user_id=user_id)
 
     if password == user.password:
-        # USER_ID = user.id        
+        # USER_ID = user.id
         set_user_id(user.id)
         # get all books in all collections of userid
         query = "SELECT books.id AS mybook_id, collections.id AS mycollection_id, collections.collection_name, books.title, books.author, books.isbn "
@@ -120,7 +120,7 @@ def do_login():
         query = query + "AND UBC.collection_id = collections.id "
         query = query + "AND UBC.book_id = books.id "
         mybooks = db.execute(query, {"user_id": user.id}).fetchall()
-        
+
         return render_template("index.html", mybooks={}, alert_info="alert-success", message="")
         #return render_template("index.html", mybooks=mybooks, alert_info="alert-success", message="")
     else:
@@ -133,9 +133,9 @@ def logout():
 
 @app.route("/search/", methods=["POST"])
 def search():
-    user_id = get_user_id()  
+    user_id = get_user_id()
     if user_id == 0:
-        return render_template("login.html")    
+        return render_template("login.html")
 
     search_string = request.form.get("search_string")
 
@@ -144,14 +144,14 @@ def search():
 
     search_string = search_string.upper()
     search_string = "%" + search_string + "%"
-    
+
     query = "SELECT id as mybook_id, title, author, isbn FROM books "
     query = query + "WHERE upper(title) LIKE :search_string OR "
     query = query + " upper(author) LIKE :search_string OR"
     query = query + " upper(isbn) LIKE :search_string"
     books = db.execute(query, {"search_string": search_string}).fetchall()
 
-    #if books is None:        
+    #if books is None:
     if len(books) == 0:
         #return "No books found"
         return render_template("index.html",mybooks={}, alert_class="alert-warning", message="No books found.")
@@ -161,7 +161,7 @@ def search():
 @app.route("/book/<int:book_id>")
 def book(book_id):
     # get userid
-    user_id = get_user_id()  
+    user_id = get_user_id()
     if user_id == 0:
         return render_template("login.html")
 
@@ -182,13 +182,13 @@ def book(book_id):
     # query = query + "WHERE books.id = :book_id "
     # query = query + "AND reviews.book_id *= :book_id "
     # query = query + "AND reviews.user_id = users.id"
-    book_reviews = db.execute(query, {"book_id": book_id}).fetchall()    
+    book_reviews = db.execute(query, {"book_id": book_id}).fetchall()
 
     isbn = book_reviews[0].isbn
     isbn = isbn.strip()
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "TfuwMgDmde8R6r1DOW2M3w", "isbns": isbn})
     if res:
-        jason_data = res.json()        
+        jason_data = res.json()
         review_count = jason_data["books"][0]["work_reviews_count"]
         average_score = jason_data["books"][0]["average_rating"]
     else:
@@ -215,14 +215,14 @@ def save_review():
         if (rating):
             rating = int(rating)
     except ValueError:
-        return render_template("error.html", message="Invalid rating.")    
-    
+        return render_template("error.html", message="Invalid rating.")
+
     if review and rating:
         query = "INSERT INTO reviews "
         query = query + "(user_id, book_id, review, rating) "
         query = query + "VALUES (:user_id, :book_id, :review, :rating) "
         db.execute(query, {"user_id": user_id, "book_id": book_id, "review": review, "rating": rating})
-        db.commit()                  
+        db.commit()
         message="Review is successfully saved."
         alert_class="alert-success"
     else:
@@ -235,25 +235,25 @@ def save_review():
     query = query + "LEFT OUTER JOIN users "
     query = query + "ON reviews.user_id = users.id "
     query = query + "WHERE books.id = :book_id"
-    book_reviews = db.execute(query, {"book_id": book_id}).fetchall()    
+    book_reviews = db.execute(query, {"book_id": book_id}).fetchall()
 
     isbn = book_reviews[0].isbn
     isbn = isbn.strip()
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "TfuwMgDmde8R6r1DOW2M3w", "isbns": isbn})
     if res:
-        jason_data = res.json()        
+        jason_data = res.json()
         review_count = jason_data["books"][0]["work_reviews_count"]
         average_score = jason_data["books"][0]["average_rating"]
     else:
         review_count = 0
-        average_score = 0                
+        average_score = 0
 
     return render_template("book.html", book=book_reviews, isbn=isbn, user_id=user_id, review_count=review_count, average_score=average_score, message=message, alert_class=alert_class)
 
 @app.route("/api/<string:isbn>")
 def api(isbn):
 
-    user_id = get_user_id()  
+    user_id = get_user_id()
     if user_id == 0:
         return render_template("login.html")
 
@@ -268,13 +268,13 @@ def api(isbn):
     #jason_data = jason_data + '"title:" "' + book.title +  '",\n'
     #jason_data = jason_data + "}\n"
     res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "TfuwMgDmde8R6r1DOW2M3w", "isbns": isbn})
-    jason_data = res.json()    
+    jason_data = res.json()
     # r = rc["books"][0]["id"]
     #book = res['books'][0]
-    #title = 
-    #author = 
+    #title =
+    #author =
     #year =
-    #isbn = 
+    #isbn =
     review_count = jason_data["books"][0]["work_reviews_count"]
     average_score = jason_data["books"][0]["average_rating"]
     #review_count = book['work_reviews_count']
@@ -287,3 +287,7 @@ def api(isbn):
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
