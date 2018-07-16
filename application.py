@@ -22,13 +22,17 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 USER_ID = [0]
+session = {"user_id": 0}
 
 def get_user_id():
-    return USER_ID[0]
+    return session["user_id"]
+    #return USER_ID[0]
 
 def set_user_id(user_id):
-    USER_ID[0] = user_id
-    return USER_ID[0]
+    session["user_id"] = user_id
+    return session["user_id"]
+    # USER_ID[0] = user_id
+    # return USER_ID[0]
 
 @app.route("/")
 def index():
@@ -279,4 +283,7 @@ def api(isbn):
     return render_template("jason_data.html", title=book.title, author=book.author, year=book.year,isbn=book.isbn, review_count=review_count, average_score=average_score)
     #return "TO DO"
 
-    
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
