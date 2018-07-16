@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ABC Book Catalog: Register
+{% endblock %}
+
+{% block login %}
+
+<a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+{% endblock %}
+
+{% block message %}
+<div>
+    &nbsp;
+</div>
+<div class="{{ alert_class }}">
+    <Strong>{{ message }}</Strong>
+</div>
+{% endblock %}
+
+
+{% block body %}
+
+    <h3>Register</h3>
+    &nbsp;
+
+    <form action="{{ url_for('do_register') }}" method="post">              
+
+            <div class="form-group">
+                    <label for="user_id">Email address:</label>
+                    <input type="email" class="form-control" name="user_id" value="{{ user_id }}">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class="form-group">
+                    <label for="first_name">First name:</label>
+                    <input type="text" class="form-control" name="first_name" value="{{ first_name }}">
+            </div>            
+            <div class="form-group">
+                    <label for="last_name">Last name:</label>
+                    <input type="text" class="form-control" name="last_name" value="{{ last_name }}">
+            </div>                        
+            <div class="form-group">
+                <button class="btn btn-info">Register!</button>
+            </div>
+    </form>
+{% endblock %}

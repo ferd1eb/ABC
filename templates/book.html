@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ABC Book Catalog
+{% endblock %}
+
+{% block login %}
+<a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+{% endblock %}
+
+{% block search %}
+<div>
+    &nbsp;
+</div>
+<form class="form-inline" action="{{ url_for('search') }}" method="post">
+    <div class="form-group">
+        <label class="sr-only" for "search_string">Search</label>
+        <input name="search_string" class="form-control" placeholder="Search books">
+        <button type="submit" class="btn btn-default">Submit!</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block message %}
+<div>
+    &nbsp;
+</div>
+<div class="{{ alert_class }}">
+    <Strong>{{ message }}</Strong>
+</div>
+{% endblock %}
+
+{% block body %}
+    &nbsp;
+    {% set ns = namespace(can_edit=true) %}
+
+    {% for bk in book %}
+        {% if loop.first %}
+        <h1>{{ bk.title }}</h1>
+        <p>by {{ bk.author }}</p>
+        <p>ISBN: {{ isbn }}</p>
+        <p>Year published: {{ bk.year }}</p>
+        <p>Goodreads reviews: {{ review_count }}</p>
+        <p>Goodreads average score: {{ average_score }}</p>
+        &nbsp;
+        {% endif %}
+
+    {% if bk.review %}
+    {% if bk.review_user_id is equalto user_id %}
+    {% set ns.can_edit=false %}
+    <h4>My review</h4>
+    {% else %}
+    <h4>Review by {{ bk.first_name }} {{ bk.last_name }}:</h4>
+    {% endif %}
+    {% endif %}
+    {% if bk.review %}
+    {{ bk.review }}
+    {% endif %}
+    
+    {% if bk.rating %}
+    <h5>Rating: </h5>
+    <div class="radio disabled">
+            {% for rating in range(1,6) %}            
+            {% if bk.rating is equalto rating %}
+                <label><input type="radio" name="rating{{ bk.review_user_id }}" disabled checked>&nbsp;{{ rating }}&nbsp; </label>
+            {% else %}
+                <label><input type="radio" name="rating{{ bk.review_user_id }}" disabled>&nbsp;{{ rating }}&nbsp; </label>
+            {% endif %}
+            {% endfor %}
+    </div>
+    {% endif %}
+    &nbsp;
+    &nbsp;    
+    {% endfor %}    
+
+    {% if ns.can_edit %}
+    &nbsp;
+    &nbsp;
+    <form action="{{ url_for('save_review') }}" method="post">              
+
+        <div class="form-group">
+                <label for="review">Write a review:</label>
+                <textarea class="form-control" rows="5" id="review" name="review"></textarea>
+        </div>
+        Rating: 
+        <div class="form-group radio">
+            <label><input type="radio" name="rating" value=1>&nbsp;1&nbsp; </label>
+            <label><input type="radio" name="rating" value=2>&nbsp;2&nbsp; </label>
+            <label><input type="radio" name="rating" value=3>&nbsp;3&nbsp; </label>            
+            <label><input type="radio" name="rating" value=4>&nbsp;4&nbsp; </label>            
+            <label><input type="radio" name="rating" value=5>&nbsp;5&nbsp; </label>            
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary">Submit!</button>
+        </div>
+        <input type="hidden" name=book_id value={{ book[0].id }}>
+
+    </form>
+    {% endif %}
+
+
+{% endblock %}

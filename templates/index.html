@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ABC Book Catalog
+{% endblock %}
+
+{% block login %}
+<!-- {% if mybooks.count in (0, none) %} -->
+<!-- <a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a> -->
+<!-- {% else %} -->
+<a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+<!-- {% endif %} -->
+{% endblock %}
+
+{% block search %}
+<div>
+    &nbsp;
+</div>
+<form class="form-inline" action="{{ url_for('search') }}" method="post">
+    <div class="form-group">
+        <label class="sr-only" for "search_string">Search</label>
+        <input name="search_string" class="form-control" placeholder="Search books">
+        <button type="submit" class="btn btn-default">Submit!</button>
+    </div>
+</form>
+{% endblock %}
+
+
+{% block message %}
+<div>
+    &nbsp;
+</div>
+<div class="{{ alert_class }}">
+    <Strong>{{ message }}</Strong>
+</div>
+{% endblock %}
+
+
+{% block body %}    
+    {% for book in mybooks %}
+        {% if loop.first %}
+            <h3>My Books</h3>
+        {% endif %}
+    {% endfor %}
+    
+    <div class="container">
+
+        {% for book in mybooks %}
+        <div class="row">
+            {% if loop.first %}
+            <div class="row">
+                    <div class="col-sm-2"><h4>ISBN</h4></div>
+                    <div class="col-sm-4"><h4>Title</h4></div>
+                    <div class="col-sm-4"><h4>Author</h4></div>
+                    <div class="col-sm-2"><h4></h4></div>
+            </div>
+            {% endif %}
+            <div class="col-sm-2">
+                {{ book.isbn }}
+            </div>
+            <div class="col-sm-4">
+                <a href="/book/{{ book.mybook_id }}"> {{ book.title }}</a>
+            </div>
+            <div class="col-sm-4">
+                    <a href="/book/{{ book.mybook_id }}"> {{ book.author }} </a>
+            </div>
+            <div class="col-sm-2">
+                    
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+{% endblock %}

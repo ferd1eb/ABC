@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ABC Book Catalog
+{% endblock %}
+
+{% block search %}
+<form action="{{ url_for('search') }}" method="post">
+        <div class="form-group">
+            <input class="form-control" name="search_string" placeholder="Search books">
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-primary">Search!</button>
+        </div>
+
+</form>
+{% endblock %}
+
+{% block body %}
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
+    <span class="s">"title"</span><span class="p">:</span> <span class="s">"{{ title }}"</span><span class="p">,</span>
+    <span class="s">"author"</span><span class="p">:</span> <span class="s">"{{ author }}"</span><span class="p">,</span>
+    <span class="s">"year"</span><span class="p">:</span> <span class="mi">year</span><span class="p">,</span>
+    <span class="s">"isbn"</span><span class="p">:</span> <span class="s">"{{ isbn }}"</span><span class="p">,</span>
+    <span class="s">"review_count"</span><span class="p">:</span> <span class="mi">{{ review_count }}</span><span class="p">,</span>
+    <span class="s">"average_score"</span><span class="p">:</span> <span class="mf">{{ average_score }}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+{% endblock %}

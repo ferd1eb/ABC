@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    ABC Book Catalog: Login
+{% endblock %}
+
+{% block message %}
+<div>
+    &nbsp;
+</div>
+<div class="{{ alert_class }}">
+    <Strong>{{ message }}</Strong>
+</div>
+{% endblock %}
+
+{% block body %}
+    <h3>Login</h3>
+    &nbsp;
+
+    <form action="{{ url_for('do_login') }}" method="post">              
+            <div class="form-group">
+                    <label for="user_id">User ID:</label>
+                    <input type="email" class="form-control" name="user_id" value="{{ user_id }}">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <button type = "submit" class ="btn btn-info">Login!</button>
+            <a href="/register" class="btn btn-info" role="button">Register</a>
+    </form>
+{% endblock %}
