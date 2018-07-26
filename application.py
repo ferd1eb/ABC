@@ -195,7 +195,24 @@ def book(book_id):
         review_count = 0
         average_score = 0
 
-    return render_template("book.html", book=book_reviews, isbn=isbn, user_id=user_id, review_count=review_count, average_score=average_score)
+    # Get reviews
+    res = requests.get("https://www.goodreads.com/book/title.json", 
+        params={"format": "json", "key": "TfuwMgDmde8R6r1DOW2M3w", 
+            "title": book_reviews[0].title, 
+            "author": book_reviews[0].author}
+            )
+    if res:
+        json_data = res.json()
+        reviews_widget = json_data["reviews_widget"]        
+        s = reviews_widget.find("/style")
+        gr_style = reviews_widget[0:s+7]       
+        gr_reviews = reviews_widget[s+8:]
+    else:
+        reviews_widget = "* No reviews found *"
+        gr_style = ""
+        gr_reviews = ""
+    
+    return render_template("book.html", book=book_reviews, isbn=isbn, user_id=user_id, review_count=review_count, average_score=average_score, gr_style=gr_style, gr_reviews=gr_reviews)
 
 
 @app.route("/save_review", methods=["POST"])
@@ -248,7 +265,24 @@ def save_review():
         review_count = 0
         average_score = 0
 
-    return render_template("book.html", book=book_reviews, isbn=isbn, user_id=user_id, review_count=review_count, average_score=average_score, message=message, alert_class=alert_class)
+# Get reviews
+    res = requests.get("https://www.goodreads.com/book/title.json", 
+        params={"format": "json", "key": "TfuwMgDmde8R6r1DOW2M3w", 
+            "title": book_reviews[0].title, 
+            "author": book_reviews[0].author}
+            )
+    if res:
+        json_data = res.json()
+        reviews_widget = json_data["reviews_widget"]        
+        s = reviews_widget.find("/style")
+        gr_style = reviews_widget[0:s+7]       
+        gr_reviews = reviews_widget[s+8:]
+    else:
+        reviews_widget = "* No reviews found *"
+        gr_style = ""
+        gr_reviews = ""        
+
+    return render_template("book.html", book=book_reviews, isbn=isbn, user_id=user_id, review_count=review_count, average_score=average_score, gr_style=gr_style, gr_reviews=gr_reviews, message=message, alert_class=alert_class)
 
 @app.route("/api/<string:isbn>")
 def api(isbn):

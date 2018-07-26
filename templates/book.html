@@ -4,6 +4,19 @@
     ABC Book Catalog
 {% endblock %}
 
+{% block custom_style %}
+    {{ gr_style|safe }}
+{% endblock %}
+
+{% block nav %}
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="/">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact">Contact</a></li>
+    </ul>
+{% endblock %}    
+
 {% block login %}
 <a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
 {% endblock %}
@@ -42,6 +55,7 @@
         <p>Year published: {{ bk.year }}</p>
         <p>Goodreads reviews: {{ review_count }}</p>
         <p>Goodreads average score: {{ average_score }}</p>
+        {{ gr_reviews|safe }}
         &nbsp;
         {% endif %}
 

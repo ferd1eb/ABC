@@ -4,6 +4,15 @@
     ABC Book Catalog
 {% endblock %}
 
+{% block nav %}
+<ul class="nav navbar-nav">
+        <li><a href="/">Home</a></li>
+        <li class="active"><a href="/about">About</a></li>
+        <li><a href="#">Projects</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+{% endblock %}      
+
 {% block login %}
 <a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
 {% endblock %}
